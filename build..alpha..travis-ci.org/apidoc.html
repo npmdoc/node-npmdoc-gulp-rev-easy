@@ -1,0 +1,331 @@
+<div class="apidocDiv">
+<style>
+/*csslint
+*/
+.apidocDiv {
+    background: #fff;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.apidocDiv a[href] {
+    color: #33f;
+    font-weight: bold;
+    text-decoration: none;
+}
+.apidocDiv a[href]:hover {
+    text-decoration: underline;
+}
+.apidocCodeCommentSpan {
+    background: #bbf;
+    color: #000;
+    display: block;
+}
+.apidocCodeKeywordSpan {
+    color: #d00;
+    font-weight: bold;
+}
+.apidocCodePre {
+    background: #eef;
+    border: 1px solid;
+    color: #777;
+    padding: 5px;
+    white-space: pre-wrap;
+}
+.apidocFooterDiv {
+    margin-top: 20px;
+    text-align: center;
+}
+.apidocModuleLi {
+    margin-top: 10px;
+}
+.apidocSectionDiv {
+    border-top: 1px solid;
+    margin-top: 20px;
+}
+.apidocSignatureSpan {
+    color: #777;
+    font-weight: bold;
+}
+</style>
+<h1>api documentation for
+    <a
+
+        href="https://github.com/timtian/gulp-rev-easy"
+
+    >gulp-rev-easy (v1.2.3)</a>
+</h1>
+<h4>easy add hash to asset path uc.js to uc.js?v=afb23 or simple add date uc.js to uc.js?v=201503031214</h4>
+<div class="apidocSectionDiv"><a
+    href="#apidoc.tableOfContents"
+    id="apidoc.tableOfContents"
+><h1>table of contents</h1></a><ol>
+
+    <li class="apidocModuleLi"><a href="#apidoc.module.gulp-rev-easy">module gulp-rev-easy</a><ol>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.gulp-rev-easy.gulp-rev-easy">
+            function <span class="apidocSignatureSpan"></span>gulp-rev-easy
+            <span class="apidocSignatureSpan">(options)</span>
+            </a>
+
+        </li>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.gulp-rev-easy.toString">
+            function <span class="apidocSignatureSpan">gulp-rev-easy.</span>toString
+            <span class="apidocSignatureSpan">()</span>
+            </a>
+
+        </li>
+
+        <li>
+
+            <span class="apidocSignatureSpan">object <span class="apidocSignatureSpan">gulp-rev-easy.</span>revver</span>
+
+        </li>
+
+    </ol></li>
+
+    <li class="apidocModuleLi"><a href="#apidoc.module.gulp-rev-easy.revver">module gulp-rev-easy.revver</a><ol>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.gulp-rev-easy.revver.rev">
+            function <span class="apidocSignatureSpan">gulp-rev-easy.revver.</span>rev
+            <span class="apidocSignatureSpan">(src, filepath, options)</span>
+            </a>
+
+        </li>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.gulp-rev-easy.revver.setOptions">
+            function <span class="apidocSignatureSpan">gulp-rev-easy.revver.</span>setOptions
+            <span class="apidocSignatureSpan">(options)</span>
+            </a>
+
+        </li>
+
+    </ol></li>
+
+    <li class="apidocModuleLi"><a href="#apidoc.module.gulp-rev-easy.toString">module gulp-rev-easy.toString</a><ol>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.gulp-rev-easy.toString.toString">
+            function <span class="apidocSignatureSpan">gulp-rev-easy.</span>toString
+            <span class="apidocSignatureSpan">()</span>
+            </a>
+
+        </li>
+
+    </ol></li>
+
+</ol></div>
+
+<div class="apidocSectionDiv">
+<h1><a href="#apidoc.module.gulp-rev-easy" id="apidoc.module.gulp-rev-easy">module gulp-rev-easy</a></h1>
+
+
+    <h2>
+        <a href="#apidoc.element.gulp-rev-easy.gulp-rev-easy" id="apidoc.element.gulp-rev-easy.gulp-rev-easy">
+        function <span class="apidocSignatureSpan"></span>gulp-rev-easy
+        <span class="apidocSignatureSpan">(options)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">gulp-rev-easy = function (options) {
+    return through.obj(function(file, enc, cb) {
+
+        options = revver.setOptions(options);
+
+        if (options.cwd) {
+            gutil.log(gutil.colors.red(&#x27;options.cwd is obsoleted, use options.base or set gulp.src(path, {cwd:mycwd}) instead&#x27;));
+            return;
+        }
+
+        gutil.log(&#x27;==== begin rev:&#x27; + gutil.colors.cyan(file.path));
+        if (file.isNull()) {
+            this.push(file);
+            return cb();
+        }
+
+        if (file.isStream()) {
+            this.emit(&#x27;error&#x27;, new gutil.PluginError(&#x27;gulp-rev-easy&#x27;, &#x27;Streaming is not supported&#x27;));
+            return cb();
+        }
+
+        var parser = require(&#x27;./src/parser/&#x27; + options.revMode);
+        var revText = parser.parse(file.contents.toString(), file.path, options);
+        file.contents = new Buffer(revText);
+
+        gutil.log(&#x27;==== end rev:&#x27; + gutil.colors.cyan(file.path));
+
+        this.push(file);
+        return cb();
+    });
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    </ul>
+
+
+
+    <h2>
+        <a href="#apidoc.element.gulp-rev-easy.toString" id="apidoc.element.gulp-rev-easy.toString">
+        function <span class="apidocSignatureSpan">gulp-rev-easy.</span>toString
+        <span class="apidocSignatureSpan">()</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">toString = function () {
+    return text;
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+
+    if (file.isStream()) {
+        this.emit(&#x27;error&#x27;, new gutil.PluginError(&#x27;gulp-rev-easy&#x27;, &#x27;Streaming is not supported&#x27;));
+        return cb();
+    }
+
+    var parser = require(&#x27;./src/parser/&#x27; + options.revMode);
+    var revText = parser.parse(file.contents.<span class="apidocCodeKeywordSpan">toString</span>(), file.path, options);
+    file.contents = new Buffer(revText);
+
+    gutil.log(&#x27;==== end rev:&#x27; + gutil.colors.cyan(file.path));
+
+    this.push(file);
+    return cb();
+});
+...</pre></li>
+    </ul>
+
+
+
+
+</div>
+
+<div class="apidocSectionDiv">
+<h1><a href="#apidoc.module.gulp-rev-easy.revver" id="apidoc.module.gulp-rev-easy.revver">module gulp-rev-easy.revver</a></h1>
+
+
+    <h2>
+        <a href="#apidoc.element.gulp-rev-easy.revver.rev" id="apidoc.element.gulp-rev-easy.revver.rev">
+        function <span class="apidocSignatureSpan">gulp-rev-easy.revver.</span>rev
+        <span class="apidocSignatureSpan">(src, filepath, options)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">rev = function (src, filepath, options) {
+    var revv = &#x27;&#x27;;
+
+    if (options.revType === &#x27;hash&#x27;) {
+
+        var assertpath = options.findFile(src, filepath, options);
+        if (fs.existsSync(assertpath)) {
+            var mtime = +fs.statSync(assertpath).mtime;
+            if (fileverCache[assertpath] &#x26;&#x26; fileverCache[assertpath].mtime == mtime) {
+                revv = fileverCache[assertpath].rev;
+                gutil.log(gutil.colors.green(&#x27;found in cache &#x3e;&#x3e;&#x27; + assertpath + &#x27;@&#x27; + mtime));
+            } else {
+                revv = crypto
+                    .createHash(&#x27;md5&#x27;)
+                    .update(
+                        fs.readFileSync(assertpath, {
+                            encoding: &#x27;utf8&#x27;
+                        }))
+                    .digest(&#x27;hex&#x27;).substring(0, options.hashLength);
+            }
+            fileverCache[assertpath] = {
+                mtime: mtime,
+                rev: revv
+            };
+        } else {
+            gutil.log(gutil.colors.red(assertpath + &#x27; not found&#x27;));
+        }
+    } else {
+        revv = dateformat(new Date(), options.dateFormat);
+    }
+
+    return revv;
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    </ul>
+
+
+
+    <h2>
+        <a href="#apidoc.element.gulp-rev-easy.revver.setOptions" id="apidoc.element.gulp-rev-easy.revver.setOptions">
+        function <span class="apidocSignatureSpan">gulp-rev-easy.revver.</span>setOptions
+        <span class="apidocSignatureSpan">(options)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">setOptions = function (options){
+    var newObj = _.assign({}, defaultOptions, options);
+    newObj.elementAttributes = _.assign({}, defaultOptions.elementAttributes, options.elementAttributes);
+    newObj.patterns = _.assign({}, defaultOptions.patterns, options.patterns);
+    return newObj
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+var crypto = require(&#x27;crypto&#x27;);
+var revver = require(&#x27;./src/revver&#x27;);
+
+
+module.exports = function(options) {
+    return through.obj(function(file, enc, cb) {
+
+options = revver.<span class="apidocCodeKeywordSpan">setOptions</span>(options);
+
+if (options.cwd) {
+    gutil.log(gutil.colors.red(&#x27;options.cwd is obsoleted, use options.base or set gulp.src(path, {cwd:mycwd}) instead&#x27;));
+    return;
+}
+
+gutil.log(&#x27;==== begin rev:&#x27; + gutil.colors.cyan(file.path));
+...</pre></li>
+    </ul>
+
+
+</div>
+
+<div class="apidocSectionDiv">
+<h1><a href="#apidoc.module.gulp-rev-easy.toString" id="apidoc.module.gulp-rev-easy.toString">module gulp-rev-easy.toString</a></h1>
+
+
+    <h2>
+        <a href="#apidoc.element.gulp-rev-easy.toString.toString" id="apidoc.element.gulp-rev-easy.toString.toString">
+        function <span class="apidocSignatureSpan">gulp-rev-easy.</span>toString
+        <span class="apidocSignatureSpan">()</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">function toString() { [native code] }</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+
+    if (file.isStream()) {
+        this.emit(&#x27;error&#x27;, new gutil.PluginError(&#x27;gulp-rev-easy&#x27;, &#x27;Streaming is not supported&#x27;));
+        return cb();
+    }
+
+    var parser = require(&#x27;./src/parser/&#x27; + options.revMode);
+    var revText = parser.parse(file.contents.<span class="apidocCodeKeywordSpan">toString</span>(), file.path, options);
+    file.contents = new Buffer(revText);
+
+    gutil.log(&#x27;==== end rev:&#x27; + gutil.colors.cyan(file.path));
+
+    this.push(file);
+    return cb();
+});
+...</pre></li>
+    </ul>
+
+
+</div>
+
+<div class="apidocFooterDiv">
+    [ this document was created with
+    <a href="https://github.com/kaizhu256/node-utility2" target="_blank">utility2</a>
+    ]
+</div>
+</div>
