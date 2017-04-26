@@ -65,16 +65,45 @@
 
         <li>
 
-            <a class="apidocElementLiA" href="#apidoc.element.gulp-rev-easy.toString">
-            function <span class="apidocSignatureSpan">gulp-rev-easy.</span>toString
-            <span class="apidocSignatureSpan">()</span>
-            </a>
+            <span class="apidocSignatureSpan">object <span class="apidocSignatureSpan">gulp-rev-easy.</span>dom</span>
+
+        </li>
+
+        <li>
+
+            <span class="apidocSignatureSpan">object <span class="apidocSignatureSpan">gulp-rev-easy.</span>plain</span>
 
         </li>
 
         <li>
 
             <span class="apidocSignatureSpan">object <span class="apidocSignatureSpan">gulp-rev-easy.</span>revver</span>
+
+        </li>
+
+    </ol></li>
+
+    <li class="apidocModuleLi"><a href="#apidoc.module.gulp-rev-easy.dom">module gulp-rev-easy.dom</a><ol>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.gulp-rev-easy.dom.parse">
+            function <span class="apidocSignatureSpan">gulp-rev-easy.dom.</span>parse
+            <span class="apidocSignatureSpan">(text, filepath, options)</span>
+            </a>
+
+        </li>
+
+    </ol></li>
+
+    <li class="apidocModuleLi"><a href="#apidoc.module.gulp-rev-easy.plain">module gulp-rev-easy.plain</a><ol>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.gulp-rev-easy.plain.parse">
+            function <span class="apidocSignatureSpan">gulp-rev-easy.plain.</span>parse
+            <span class="apidocSignatureSpan">(text, filepath, options)</span>
+            </a>
 
         </li>
 
@@ -96,19 +125,6 @@
             <a class="apidocElementLiA" href="#apidoc.element.gulp-rev-easy.revver.setOptions">
             function <span class="apidocSignatureSpan">gulp-rev-easy.revver.</span>setOptions
             <span class="apidocSignatureSpan">(options)</span>
-            </a>
-
-        </li>
-
-    </ol></li>
-
-    <li class="apidocModuleLi"><a href="#apidoc.module.gulp-rev-easy.toString">module gulp-rev-easy.toString</a><ol>
-
-        <li>
-
-            <a class="apidocElementLiA" href="#apidoc.element.gulp-rev-easy.toString.toString">
-            function <span class="apidocSignatureSpan">gulp-rev-easy.</span>toString
-            <span class="apidocSignatureSpan">()</span>
             </a>
 
         </li>
@@ -164,15 +180,59 @@
 
 
 
+
+
+
+
+
+</div>
+
+<div class="apidocSectionDiv">
+<h1><a href="#apidoc.module.gulp-rev-easy.dom" id="apidoc.module.gulp-rev-easy.dom">module gulp-rev-easy.dom</a></h1>
+
+
     <h2>
-        <a href="#apidoc.element.gulp-rev-easy.toString" id="apidoc.element.gulp-rev-easy.toString">
-        function <span class="apidocSignatureSpan">gulp-rev-easy.</span>toString
-        <span class="apidocSignatureSpan">()</span>
+        <a href="#apidoc.element.gulp-rev-easy.dom.parse" id="apidoc.element.gulp-rev-easy.dom.parse">
+        function <span class="apidocSignatureSpan">gulp-rev-easy.dom.</span>parse
+        <span class="apidocSignatureSpan">(text, filepath, options)</span>
         </a>
     </h2>
     <ul>
-    <li>description and source-code<pre class="apidocCodePre">toString = function () {
-    return text;
+    <li>description and source-code<pre class="apidocCodePre">parse = function (text, filepath, options) {
+    try {
+        var $ = cheerio.load(text, {
+            decodeEntities: false
+        });
+
+        for (var i = 0; i &lt; options.fileTypes.length; i++) {
+            var fileType = options.fileTypes[i];
+            var attributes = options.elementAttributes[fileType];
+
+            var $assets = $(attributes.name);
+            for (var j = 0; j &lt; $assets.length; j++) {
+                var $asset = $assets.eq(j);
+                var src = $asset.attr(attributes.src);
+
+                if (src &amp;&amp; !src.match(/.*(\/\/).*/)) {
+                    var revv = revver.rev(src, filepath, options);
+
+                    if (revv !== '') {
+                        var newsrc = options.transformPath(src, revv);
+                        $asset.attr(attributes.src, newsrc);
+                        gutil.log(src + ' --&gt; ', gutil.colors.green(newsrc));
+                    } else {
+                        gutil.log(gutil.colors.blue('ignore:rev is empty'), src);
+                    }
+                }
+            }
+        }
+
+        return $.html();
+
+    } catch (err) {
+        gutil.log(gutil.colors.red(err.message));
+        gutil.log(gutil.colors.red(err.stack));
+    }
 }</pre></li>
     <li>example usage<pre class="apidocCodePre">...
 
@@ -182,7 +242,7 @@
     }
 
     var parser = require('./src/parser/' + options.revMode);
-    var revText = parser.parse(file.contents.<span class="apidocCodeKeywordSpan">toString</span>(), file.path, options);
+    var revText = parser.<span class="apidocCodeKeywordSpan">parse</span>(file.contents.toString(), file.path, options);
     file.contents = new Buffer(revText);
 
     gutil.log('==== end rev:' + gutil.colors.cyan(file.path));
@@ -194,6 +254,101 @@
     </ul>
 
 
+</div>
+
+<div class="apidocSectionDiv">
+<h1><a href="#apidoc.module.gulp-rev-easy.plain" id="apidoc.module.gulp-rev-easy.plain">module gulp-rev-easy.plain</a></h1>
+
+
+    <h2>
+        <a href="#apidoc.element.gulp-rev-easy.plain.parse" id="apidoc.element.gulp-rev-easy.plain.parse">
+        function <span class="apidocSignatureSpan">gulp-rev-easy.plain.</span>parse
+        <span class="apidocSignatureSpan">(text, filepath, options)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">parse = function (text, filepath, options) {
+    try {
+
+        var resText = [];
+        var textList = [];
+        var mList = [];
+        if (options.ignorePattern) {
+            var tmptextList = text.split(options.ignorePattern);
+
+            var m;
+            var mindex = 0;
+            textList.push({raw: tmptextList[mindex], ignore: false});
+            while ((m = options.ignorePattern.exec(text)) !== null) {
+                textList.push({raw: m[0], ignore: options.ignoreFilter(m)});
+                mindex++;
+                textList.push({raw: tmptextList[mindex], ignore: false});
+            }
+        } else {
+            textList.push({raw:text, ignore:false});
+        }
+
+
+
+        for (var j = 0; j &lt; textList.length; j++) {
+            var revObj = textList[j];
+            if (!revObj.ignore) {
+                var revText = revObj.raw;
+                for (var i = 0; i &lt; options.fileTypes.length; i++) {
+                    var fileType = options.fileTypes[i];
+                    var pattern = options.patterns[fileType];
+                    revText = revText.replace(pattern.regex, function (match, p1, p2, p3, offset, string) {
+
+                        var q = p2.substring(0, 1);
+                        var src = p2.substring(1, p2.length - 1);
+                        var revv = revver.rev(src, filepath, options);
+                        var newsrc = p2;
+
+                        if (revv !== '') {
+                            newsrc = options.transformPath(src, revv);
+                            gutil.log(src + ' --&gt; ', gutil.colors.green(newsrc));
+                        } else {
+                            gutil.log(gutil.colors.blue('ignore:rev is empty'), src);
+                        }
+
+                        return p1 + q + newsrc + q + p3;
+                    })
+                }
+                resText.push(revText);
+            }else{
+                resText.push(revObj.raw);
+            }
+
+
+            if (mList.length &gt; 0)
+                resText.push(mList.shift());
+        }
+
+
+        return resText.join('');
+    } catch (err) {
+        gutil.log(gutil.colors.red(err.message));
+        gutil.log(gutil.colors.red(err.stack));
+    }
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+
+    if (file.isStream()) {
+        this.emit('error', new gutil.PluginError('gulp-rev-easy', 'Streaming is not supported'));
+        return cb();
+    }
+
+    var parser = require('./src/parser/' + options.revMode);
+    var revText = parser.<span class="apidocCodeKeywordSpan">parse</span>(file.contents.toString(), file.path, options);
+    file.contents = new Buffer(revText);
+
+    gutil.log('==== end rev:' + gutil.colors.cyan(file.path));
+
+    this.push(file);
+    return cb();
+});
+...</pre></li>
+    </ul>
 
 
 </div>
@@ -242,7 +397,23 @@
 
     return revv;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+
+            var $assets = $(attributes.name);
+            for (var j = 0; j &lt; $assets.length; j++) {
+                var $asset = $assets.eq(j);
+                var src = $asset.attr(attributes.src);
+
+                if (src &amp;&amp; !src.match(/.*(\/\/).*/)) {
+var revv = revver.<span class="apidocCodeKeywordSpan">rev</span>(src, filepath, options);
+
+if (revv !== '') {
+    var newsrc = options.transformPath(src, revv);
+    $asset.attr(attributes.src, newsrc);
+    gutil.log(src + ' --&gt; ', gutil.colors.green(newsrc));
+} else {
+    gutil.log(gutil.colors.blue('ignore:rev is empty'), src);
+...</pre></li>
     </ul>
 
 
@@ -276,40 +447,6 @@ if (options.cwd) {
 }
 
 gutil.log('==== begin rev:' + gutil.colors.cyan(file.path));
-...</pre></li>
-    </ul>
-
-
-</div>
-
-<div class="apidocSectionDiv">
-<h1><a href="#apidoc.module.gulp-rev-easy.toString" id="apidoc.module.gulp-rev-easy.toString">module gulp-rev-easy.toString</a></h1>
-
-
-    <h2>
-        <a href="#apidoc.element.gulp-rev-easy.toString.toString" id="apidoc.element.gulp-rev-easy.toString.toString">
-        function <span class="apidocSignatureSpan">gulp-rev-easy.</span>toString
-        <span class="apidocSignatureSpan">()</span>
-        </a>
-    </h2>
-    <ul>
-    <li>description and source-code<pre class="apidocCodePre">function toString() { [native code] }</pre></li>
-    <li>example usage<pre class="apidocCodePre">...
-
-    if (file.isStream()) {
-        this.emit('error', new gutil.PluginError('gulp-rev-easy', 'Streaming is not supported'));
-        return cb();
-    }
-
-    var parser = require('./src/parser/' + options.revMode);
-    var revText = parser.parse(file.contents.<span class="apidocCodeKeywordSpan">toString</span>(), file.path, options);
-    file.contents = new Buffer(revText);
-
-    gutil.log('==== end rev:' + gutil.colors.cyan(file.path));
-
-    this.push(file);
-    return cb();
-});
 ...</pre></li>
     </ul>
 
