@@ -1,4 +1,7 @@
-# api documentation for  [gulp-rev-easy (v1.2.3)](https://github.com/timtian/gulp-rev-easy)  [![npm package](https://img.shields.io/npm/v/npmdoc-gulp-rev-easy.svg?style=flat-square)](https://www.npmjs.org/package/npmdoc-gulp-rev-easy) [![travis-ci.org build-status](https://api.travis-ci.org/npmdoc/node-npmdoc-gulp-rev-easy.svg)](https://travis-ci.org/npmdoc/node-npmdoc-gulp-rev-easy)
+# npmdoc-gulp-rev-easy
+
+#### basic api documentation for  [gulp-rev-easy (v1.2.3)](https://github.com/timtian/gulp-rev-easy)  [![npm package](https://img.shields.io/npm/v/npmdoc-gulp-rev-easy.svg?style=flat-square)](https://www.npmjs.org/package/npmdoc-gulp-rev-easy) [![travis-ci.org build-status](https://api.travis-ci.org/npmdoc/node-npmdoc-gulp-rev-easy.svg)](https://travis-ci.org/npmdoc/node-npmdoc-gulp-rev-easy)
+
 #### easy add hash to asset path uc.js to uc.js?v=afb23 or simple add date uc.js to uc.js?v=201503031214
 
 [![NPM](https://nodei.co/npm/gulp-rev-easy.png?downloads=true&downloadRank=true&stars=true)](https://www.npmjs.com/package/gulp-rev-easy)
@@ -68,7 +71,8 @@
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1"
     },
-    "version": "1.2.3"
+    "version": "1.2.3",
+    "bin": {}
 }
 ```
 
